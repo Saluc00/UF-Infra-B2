@@ -9,18 +9,24 @@
 - (Bot net ?)
 - (mirai botnet ?)
 
-
+- plusieurs reverse pour different os
 
 
 ETAPE 1:
-- Reverse shell OK !
+- serveur ssh
+- Reverse shell
 
 ETAPE 2:
-- Interface web OK !
-- Gerer les reverse depuis l'interface OK !
+- Interface web
+- Gerer les reverse depuis l'interface
 
 ETAPE 3:
+- serveur git
+- Repo Git maison (envoie la maj en prod et dans le rep)
+
+==================================================================
+ETAPE 4:
 Bot net ?
 
-ETAPE 4:
+ETAPE 5:
 Les PC inféctés connaissent l'ip du serveur meme apres changement d'ip
