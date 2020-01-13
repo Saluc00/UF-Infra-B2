@@ -1,0 +1,26 @@
+- Serveur ssh / web
+- interface web
+- git
+- PC victime une fois infécté se connecte au demarrage
+- Reverse SHELL
+- Pouvoir gerer les differents PC inféctés depuis l'interface
+- Back UP auto (crontab)
+- VagrantFile (pour deployer facilement le serveur)
+- (Bot net ?)
+- (mirai botnet ?)
+
+
+
+
+ETAPE 1:
+- Reverse shell OK !
+
+ETAPE 2:
+- Interface web OK !
+- Gerer les reverse depuis l'interface OK !
+
+ETAPE 3:
+Bot net ?
+
+ETAPE 4:
+Les PC inféctés connaissent l'ip du serveur meme apres changement d'ip
