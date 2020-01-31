@@ -15,5 +15,5 @@ pour selectionner le 3 eme client on tape select 3, pour quitter on tape quit
 
 le .exe peut être construit en tapant "python setup.py build"
 
-on a besoin d'avoir cx_Freeze
+on a besoin d'avoir cx_Freeze ( python -m pip install cx_Freeze --upgrade )
 on peut créer un autorun.inf si on veut rendre automatique le programme sur un cd et donner un logo à l'executable
