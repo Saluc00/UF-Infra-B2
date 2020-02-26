@@ -328,7 +328,6 @@ class Listener:
             " |_|  \_\___| \_/ \___|_|  |___/\___| |_____/|_| |_|\___|_|_|", 1))
         print(self.uyari_renk(
             "# ==============================================================================", 1))
-
         print(self.uyari_renk("# description 	:", 1) +
               "Reverse-Shell multi-clients qui autorise plusieurs connexions a partir des ordinateurs cibles.")
         print(self.uyari_renk("# date        	:", 1) + "25.02.2020")
