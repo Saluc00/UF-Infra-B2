@@ -5,7 +5,7 @@
 
 doc pour le reverse : 
 
-on lance sur notre serveur le Listener.py et on attend que les clients se connecte  ( python3 server.py )
+on lance sur notre serveur le Listener.py et on attend que les clients se connecte  ( python3 Listener.py )
 on lance le ReverseBackdoor.exe qui se connecte au serveur et on attend les commandes
 
 
