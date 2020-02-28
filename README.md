@@ -2,7 +2,7 @@
 
 _Dans le cadre du projet 2020 UF infrastucture & Système d'information, nous avons réalisé un reverse shell en python avec un contrôle depuis une interface web, ainsi qu'un déploiement à l'aide de vagrant._
 
-_Réalisé par CEBERIO Pierre **[PierreYnov](https://github.com/PierreYnov)** et USEREAU Lucas **[Saluc](https://github.com/Saluc00)** ._
+_Réalisé par CEBERIO Pierre **[@PierreYnov](https://github.com/PierreYnov)** et USEREAU Lucas **[@Saluc](https://github.com/Saluc00)** ._
 
 ![img](https://github.com/Saluc00/UF-Infra-B2/blob/master/Doc/img1.png)
 
